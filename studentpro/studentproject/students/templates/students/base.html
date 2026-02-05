@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management</title>
+</head>
+<body>
+{% load static %}
+
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="{% static 'music/ben10_title_hindi.mp3' %}" type="audio/mpeg">
+</audio>
+
+<!-- STOP BUTTON ONLY -->
+<button id="stopBtn" onclick="stopMusic()" style="
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    padding:12px 18px;
+    background:rgb(15, 232, 15);
+    color:rgb(255, 255, 255);
+    border:none;
+    border-radius:30px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 0 20px red;
+    z-index:9999;
+">
+⏹ STOP MUSIC
+</button>
+
+<script>
+const music = document.getElementById("bgMusic");
+
+// auto-play AFTER first user interaction (browser rule)
+document.addEventListener("click", function autoPlayOnce() {
+    music.volume = 0.4;
+    music.play().catch(()=>{});
+    document.removeEventListener("click", autoPlayOnce);
+});
+
+// stop function
+function stopMusic() {
+    music.pause();
+    music.currentTime = 0;
+}
+</script>
+
+<!-- BEN 10 BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="{% static 'music/ben10_title_hindi.mp3' %}" type="audio/mpeg">
+</audio>
+
+<script>
+document.addEventListener("click", function playMusicOnce() {
+    const music = document.getElementById("bgMusic");
+    music.volume = 0.4;   // softer background
+    music.play().catch(()=>{});
+    document.removeEventListener("click", playMusicOnce);
+});
+</script>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

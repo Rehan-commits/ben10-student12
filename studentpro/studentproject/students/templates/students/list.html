@@ -1,0 +1,248 @@
+
+
+{% extends 'students/base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ben 10 Student System</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Orbitron',sans-serif;
+}
+
+body{
+    background:black;
+    color:#00ff88;
+    overflow:hidden;
+}
+
+/* LOADER */
+#loader{
+    position:fixed;
+    inset:0;
+    background:black;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+.loader-ring{
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    border:6px solid #00ff88;
+    border-top:6px solid transparent;
+    animation:spin 1s linear infinite;
+    box-shadow:0 0 30px #00ff88;
+}
+#loader p{margin-top:20px;animation:blink 1s infinite}
+
+/* MAIN */
+#main{display:none;min-height:100vh}
+
+/* HEADER */
+header{text-align:center;padding:30px;text-shadow:0 0 25px #00ff88}
+
+/* SOUND BUTTON */
+#soundBtn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    padding:12px 22px;
+    background:#00ff88;
+    border:none;
+    border-radius:30px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 0 20px #00ff88;
+}
+
+/* ADD BUTTON */
+.add-btn{
+    display:inline-block;
+    margin:20px;
+    padding:14px 30px;
+    border-radius:40px;
+    background:#00ff88;
+    color:black;
+    text-decoration:none;
+    box-shadow:0 0 25px #00ff88;
+    transition:.3s;
+}
+.add-btn:hover{transform:scale(1.1)}
+
+/* TABLE */
+table{
+    width:85%;
+    margin:auto;
+    border-collapse:collapse;
+    animation:scan 1.5s ease;
+}
+th,td{padding:14px;text-align:center}
+th{background:#00ff88;color:black}
+tr{border-bottom:1px solid #00ff88;transition:.2s}
+tr:hover{
+    background:rgba(0,255,136,.15);
+    transform:scale(1.02);
+}
+
+/* ACTION */
+.action a{
+    padding:6px 14px;
+    background:#00ff88;
+    color:black;
+    border-radius:20px;
+    text-decoration:none;
+    margin:0 5px;
+}
+
+/* OMNITRIX */
+.omnitrix{
+    position:fixed;
+    right:30px;
+    bottom:30px;
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    border:5px solid #00ff88;
+    box-shadow:0 0 30px #00ff88;
+    animation:spin 4s linear infinite;
+}
+.omnitrix::before{
+    content:'';
+    position:absolute;
+    inset:18px;
+    background:#00ff88;
+    border-radius:50%;
+}
+
+/* ANIMATIONS */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{50%{opacity:.3}}
+@keyframes scan{
+    from{opacity:0;transform:translateY(60px)}
+    to{opacity:1;transform:translateY(0)}
+}
+body.ultimate{
+    background:radial-gradient(circle,#2b0033,#000);
+    color:#c77dff
+}
+body.ultimate .add-btn,
+body.ultimate th,
+body.ultimate .action a{
+    background:#c77dff;color:black;
+    box-shadow:0 0 30px #c77dff
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+    <div class="loader-ring"></div>
+    <p>OMNITRIX BOOTING...</p>
+</div>
+
+<!-- SOUND ENABLE -->
+<button id="soundBtn" onclick="enableSound()">🔊 ACTIVATE OMNITRIX</button>
+
+<!-- 🔊 REAL BEN-10-STYLE SOUNDS -->
+<audio id="bootSound" src="https://www.myinstants.com/media/sounds/ben-10-omnitrix.mp3"></audio>
+<audio id="scanSound" src="https://www.myinstants.com/media/sounds/alien-scan.mp3"></audio>
+<audio id="transformSound" src="https://www.myinstants.com/media/sounds/ben-10-transform.mp3"></audio>
+<audio id="alertSound" src="https://www.myinstants.com/media/sounds/omnitrix-error.mp3"></audio>
+
+<!-- MAIN -->
+<div id="main">
+
+<header>
+    <h1>🟢 BEN 10 STUDENT SYSTEM</h1>
+</header>
+
+<center>
+    <a href="/add/" class="add-btn" onclick="playTransform()">➕ ADD STUDENT</a>
+</center>
+
+<table>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Email</th>
+    <th>Course</th>
+    <th>Action</th>
+</tr>
+
+{% for student in students %}
+<tr onmouseenter="playScan()">
+    <td>{{ student.id }}</td>
+    <td>{{ student.name }}</td>
+    <td>{{ student.age }}</td>
+    <td>{{ student.email }}</td>
+    <td>{{ student.course }}</td>
+    <td class="action">
+        <a href="/edit/{{ student.id }}/" onclick="playTransform()">✏</a>
+        <a href="/delete/{{ student.id }}/" onclick="return confirmDelete()">❌</a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<div class="omnitrix"></div>
+</div>
+
+<script>
+let soundEnabled=false;
+
+const bootSound=document.getElementById("bootSound");
+const scanSound=document.getElementById("scanSound");
+const transformSound=document.getElementById("transformSound");
+const alertSound=document.getElementById("alertSound");
+
+function enableSound(){
+    soundEnabled=true;
+    bootSound.play();
+    document.getElementById("soundBtn").style.display="none";
+}
+
+function playScan(){
+    if(soundEnabled){
+        scanSound.currentTime=0;
+        scanSound.play();
+    }
+}
+
+function playTransform(){
+    if(soundEnabled){
+        transformSound.currentTime=0;
+        transformSound.play();
+    }
+}
+
+function confirmDelete(){
+    if(soundEnabled) alertSound.play();
+    return confirm("⚠ Alien data will be erased. Continue?");
+}
+
+/* Loader timing */
+setTimeout(()=>{
+    document.getElementById("loader").style.display="none";
+    document.getElementById("main").style.display="block";
+},2500);
+</script>
+
+</body>
+</html>
+{% endblock %}

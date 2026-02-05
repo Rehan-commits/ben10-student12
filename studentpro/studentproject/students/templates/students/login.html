@@ -1,0 +1,135 @@
+
+{% extends 'students/base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Omnitrix Superuser Login</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Orbitron',sans-serif;
+}
+
+body{
+    background:black;
+    color:#00ff88;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    width:420px;
+    padding:40px;
+    border:3px solid #00ff88;
+    border-radius:20px;
+    box-shadow:0 0 60px #00ff88;
+    text-align:center;
+    animation:glow 2s infinite alternate;
+    position:relative;
+}
+
+.omnitrix{
+    position:absolute;
+    top:-45px;
+    left:50%;
+    transform:translateX(-50%);
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    border:5px solid #00ff88;
+    animation:spin 3s linear infinite;
+}
+.omnitrix::before{
+    content:'';
+    position:absolute;
+    inset:16px;
+    background:#00ff88;
+    border-radius:50%;
+}
+
+h2{
+    margin-bottom:20px;
+    text-shadow:0 0 25px #00ff88;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:12px 0;
+    border-radius:30px;
+    border:2px solid #00ff88;
+    background:black;
+    color:#00ff88;
+}
+
+button{
+    margin-top:20px;
+    padding:14px 30px;
+    border:none;
+    border-radius:40px;
+    background:#00ff88;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 0 30px #00ff88;
+}
+
+.error{
+    color:red;
+    margin-bottom:10px;
+}
+
+/* Animations */
+@keyframes spin{
+    to{transform:translateX(-50%) rotate(360deg);}
+}
+@keyframes glow{
+    from{box-shadow:0 0 30px #00ff88;}
+    to{box-shadow:0 0 80px #00ff88;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="omnitrix"></div>
+
+    <h2>🛡 SUPERUSER LOGIN</h2>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Superuser Name" required>
+        <input type="password" name="password" placeholder="Access Code" required>
+        <button type="submit">🔓 ACCESS ADMIN</button>
+    </form>
+</div>
+{% load static %}
+
+<audio id="bg-music" autoplay loop hidden>
+  <source src="{% static 'music/ben10_title_hindi.mp3' %}" type="audio/mpeg">
+</audio>
+
+<script>
+  document.addEventListener("click", () => {
+    document.getElementById("bg-music").play();
+  }, { once: true });
+</script>
+
+</body>
+</html>
+{% endblock %}

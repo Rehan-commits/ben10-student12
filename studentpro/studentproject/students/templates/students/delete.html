@@ -1,0 +1,126 @@
+{% extends 'students/base.html' %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Delete Student – Ben 10</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Orbitron',sans-serif;
+}
+
+body{
+    background:black;
+    color:#00ff88;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+}
+
+/* WARNING CARD */
+.card{
+    width:420px;
+    padding:30px;
+    border:3px solid #00ff88;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 0 40px #00ff88;
+    animation:pulse 1.5s infinite alternate;
+}
+
+h2{
+    margin-bottom:15px;
+    text-shadow:0 0 20px #00ff88;
+}
+
+p{
+    margin-bottom:25px;
+}
+
+/* BUTTONS */
+.btn{
+    padding:12px 22px;
+    margin:10px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.delete{
+    background:red;
+    color:white;
+    box-shadow:0 0 20px red;
+}
+
+.cancel{
+    background:#00ff88;
+    color:black;
+    box-shadow:0 0 20px #00ff88;
+}
+
+/* OMNITRIX */
+.omnitrix{
+    position:absolute;
+    top:-45px;
+    left:50%;
+    transform:translateX(-50%);
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    border:5px solid #00ff88;
+    animation:spin 3s linear infinite;
+}
+.omnitrix::before{
+    content:'';
+    position:absolute;
+    inset:16px;
+    background:#00ff88;
+    border-radius:50%;
+}
+
+/* ANIMATIONS */
+@keyframes spin{
+    to{transform:translateX(-50%) rotate(360deg);}
+}
+@keyframes pulse{
+    from{box-shadow:0 0 20px #00ff88;}
+    to{box-shadow:0 0 50px #00ff88;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔊 ALERT SOUND -->
+<audio id="alertSound" src="https://www.myinstants.com/media/sounds/omnitrix-error.mp3" autoplay></audio>
+
+<div class="card">
+    <div class="omnitrix"></div>
+
+    <h2>⚠ OMNITRIX WARNING</h2>
+    <p>
+        Delete student:<br>
+        <strong>{{ student.name }}</strong> ?
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn delete">❌ CONFIRM DELETE</button>
+        <a href="/" class="btn cancel">⬅ CANCEL</a>
+    </form>
+</div>
+
+</body>
+</html>
+{% endblock %}
